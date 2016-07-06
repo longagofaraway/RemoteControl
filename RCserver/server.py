@@ -26,10 +26,10 @@ def hello():
     resp.set_cookie('user',user)
     return resp
 
-#check state of server
+'''#check state of server
 @app.route("/getcurdir")
 def get_cur_dir():
-    return cur_dir      
+    return cur_dir '''     
     
 @app.route("/killall")
 def killall():
