@@ -6,7 +6,7 @@
 
 void die(char *msg)
 {
-    FILE * f = fopen("/home/debian/projects/RCserver/log","w");
+    FILE * f = fopen("/home/pi/server/log","w");
     fwrite(msg,1,strlen(msg),f);
     fclose(f);
     exit(1);
@@ -47,7 +47,7 @@ int main()
 
         client.sin_port = htons(port);
 
-        if (sendto(sock, "abc", 3, 0, (struct sockaddr *) &client, client_addr_len) == -1)
+        if (sendto(sock, "abc", 4, 0, (struct sockaddr *) &client, client_addr_len) == -1)
         {
             die("sendto");
         }
