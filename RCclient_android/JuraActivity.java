@@ -26,6 +26,11 @@ public class JuraActivity extends AppCompatActivity {
     private String serverIp = "";
     private String appCookie = "";
     private boolean inWork = false;
+    
+    private final ScheduledExecutorService scheduler =
+        Executors.newScheduledThreadPool(1);
+    ScheduledFuture<?> syncPosHandle;
+    private boolean playbackInProgress = false;
 
     private int duration = 0;
 
@@ -50,9 +55,21 @@ public class JuraActivity extends AppCompatActivity {
     public void setTextView(String s) {
         //textView.setText(textView.getText().toString() + '\t'+ s);
     }
-    public void setSeekBarProgress() {
+    public void resetSeekBarProgress() {
         seekBar.setProgress(0);
     }
+    public void setSeekBarProgress(int pos) {
+        seekBar.setProgress(pos);
+    }
+    public void playbackStopped() {
+        resetSeekBarProgress();
+        duration = 0;
+        
+        if (!syncPosHandle.isDone()) {
+            syncPosHandle.cancel(false);
+        }
+    }
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +94,25 @@ public class JuraActivity extends AppCompatActivity {
 
         findServer();
     }
+    
+    @Override 
+    protected void onStop() {
+        super.onStop();
+        
+        if (!syncPosHandle.isDone()) {
+            playbackInProgress = true;
+            syncPosHandle.cancel(false);
+        }
+    }
+    
+    @Override 
+    protected void onRestart() {
+        super.onRestart();
+        
+        if (playbackInProgress)
+            startSyncPosition();
+    }
+    
     private void findServer() {
         serverIp = "http://192.168.199.14:5000";
         startAsyncTaskCookie();
@@ -173,6 +209,13 @@ public class JuraActivity extends AppCompatActivity {
             return;
         int newPos = duration * pos;
         startAsyncTask("setposition?arg="+Integer.toString(newPos)+"0000");
+    }
+    public void startSyncPosition() {
+        final Runnable syncPosition = new Runnable() {
+            public void run() { startAsyncTask("syncPosition"); }
+        };
+        syncPosHandle =
+            scheduler.scheduleWithFixedDelay(syncPosition, 1, 1, SECONDS);
     }
     public void Sync(View v) {
         findServer();

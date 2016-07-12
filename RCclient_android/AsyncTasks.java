@@ -25,6 +25,7 @@ public class AsyncTasks {
     final static int SERVER_CODE_DURATION = 2;
     final static int SERVER_CODE_POSITION = 3;
     final static int SERVER_CODE_PLAYBACK = 4;
+    final static int SERVER_CODE_PLAYBACK_STOP = 5;
 
     static class HttpGetResult {
         String message;
@@ -197,13 +198,16 @@ public class AsyncTasks {
                         mainClass.buildTable(reader.getString("list"));
                         break;
                     case SERVER_CODE_POSITION:
-                        //mainClass.buildTable(reader.getInt("position"));
+                        mainClass.setSeekBarProgress(reader.getInt("position"));
                         break;
                     case SERVER_CODE_PLAYBACK:
                         mainClass.setSeekBarProgress();
                         mainClass.startAsyncTaskDuration();
+                        mainClass.startSyncPosition();
                         break;
-
+                    case SERVER_CODE_PLAYBACK_STOP:
+                        mainClass.playbackStopped()
+                        break;
                 }
             } catch (JSONException e) {
                 mainClass.setDebugView(e.toString());
