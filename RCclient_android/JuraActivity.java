@@ -59,7 +59,8 @@ public class JuraActivity extends AppCompatActivity {
         seekBar.setProgress(0);
     }
     public void setSeekBarProgress(int pos) {
-        seekBar.setProgress(pos);
+        percent = (pos / duration) * seekBar.getMax()
+        seekBar.setProgress(percent);
     }
     public void playbackStopped() {
         resetSeekBarProgress();
