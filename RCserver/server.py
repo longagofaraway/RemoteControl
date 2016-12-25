@@ -61,7 +61,7 @@ def somefunc():
         except omxcontrol.OmxControlError:
             return ''
     elif os.path.isdir(path):
-        proc = subprocess.Popen('ls %s' % path,stdout=subprocess.PIPE,shell=True)
+        proc = subprocess.Popen('ls "%s"' % path,stdout=subprocess.PIPE,shell=True)
         out,err = proc.communicate()
         out = out.decode('utf-8')
         users[user] = path
