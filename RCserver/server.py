@@ -91,6 +91,16 @@ def togglesubtitles():
     subprocess.Popen('/home/pi/omxplayer-master/dbuscontrol.sh togglesubtitles',shell=True)
     return ''
     
+@app.route('/nextaudio')
+def nextaudio():
+    try:
+        omx = omxcontrol.OmxControl()
+        omx.action(OmxControl.ACTION_NEXT_AUDIO)
+        return ''
+    except omxcontrol.OmxControlError,e:
+        print str(e)
+        return ''  
+    
 @app.route('/setposition')
 def setposition():
     arg = request.args.get('arg','')
