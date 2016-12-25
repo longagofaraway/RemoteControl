@@ -95,7 +95,17 @@ def togglesubtitles():
 def nextaudio():
     try:
         omx = omxcontrol.OmxControl()
-        omx.action(OmxControl.ACTION_NEXT_AUDIO)
+        omx.action(omxcontrol.OmxControl.ACTION_NEXT_AUDIO)
+        return ''
+    except omxcontrol.OmxControlError,e:
+        print str(e)
+        return ''  
+
+@app.route('/prevaudio')
+def prevaudio():
+    try:
+        omx = omxcontrol.OmxControl()
+        omx.action(omxcontrol.OmxControl.ACTION_PREVIOUS_AUDIO)
         return ''
     except omxcontrol.OmxControlError,e:
         print str(e)
